@@ -1,4 +1,4 @@
-# Log
+# log
 $logDir = "C:\IntuneLogs\FortiClient\Remove_VPN"
 $logFile = "$logDir\log_$(Get-Date -Format 'yyyy-MM-dd').txt"
 
@@ -16,18 +16,18 @@ function Write-Log {
     Add-Content -Path $logFile -Value "$logMessage"
 }
 
-Write-Log "Iniciando remoÁ„o da configuraÁ„o do FortiClient..."
+Write-Log "Iniciando remo√ß√£o da configura√ß√£o do FortiClient..."
 
-# Verificar e remover a chave de registro do FortiClient (SSL VPN)
+# verificar e remover a chave de registro
 $regPath = "HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn"
 if (Test-Path $regPath) {
     Remove-Item -Path $regPath -Recurse -Force
-    Write-Log "ConfiguraÁ„o do FortiClient foi removida com sucesso do registro."
+    Write-Log "Configura√ß√£o do FortiClient foi removida com sucesso do registro."
 } else {
-    Write-Log "A chave de registro '$regPath' n„o foi encontrada. Nenhuma remoÁ„o necess·ria."
+    Write-Log "A chave de registro '$regPath' n√£o foi encontrada. Nenhuma remo√ß√£o necess√°ria."
 }
 
-# Remove a tarefa agendada (se existir)
+# remove a tarefa agendada
 $taskName = "FortiClient_VPN_Configurator"
 $existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 if ($existingTask) {
@@ -38,14 +38,14 @@ if ($existingTask) {
     Write-Log "Nenhuma tarefa agendada encontrada com o nome '$taskName'."
 }
 
-# Remover os arquivos de configuraÁ„o
+#remover os arquivos de configura√ß√£o
 $sourcePath = "C:\IntuneFiles\FortiClient\Configure_VPN.ps1"
 if (Test-Path $sourcePath) {
-    Write-Log "Removendo o arquivo de configuraÁ„o $sourcePath."
+    Write-Log "Removendo o arquivo de configura√ß√£o $sourcePath."
     Remove-Item -Path $sourcePath -Force
-    Write-Log "Arquivo de configuraÁ„o removido com sucesso."
+    Write-Log "Arquivo de configura√ß√£o removido com sucesso."
 } else {
-    Write-Log "Arquivo de configuraÁ„o $sourcePath n„o encontrado."
+    Write-Log "Arquivo de configura√ß√£o $sourcePath n√£o encontrado."
 }
 
-Write-Log "RemoÁ„o completa da configuraÁ„o do FortiClient."
+Write-Log "Remo√ß√£o completa das configura√ß√µes do FortiClient."

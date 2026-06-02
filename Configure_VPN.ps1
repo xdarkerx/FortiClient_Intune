@@ -1,3 +1,9 @@
+#particularidade de cada Tunel
+$tunnels = @(
+        @{ Name = "Nome"; Server = "Servidor.remoto"; Description = "Descri√ß√£o"; Sso =  "1" },
+        @{ Name = "Nome"; Server = "Servidor.remoto"; Description = "Descri√ß√£o"; Sso =  "1" }
+)
+
 #log
 $logDir = "C:\IntuneLogs\FortiClient\Configure_VPN_Logs"
 $logFile = "$logDir\log_$(Get-Date -Format 'yyyy-MM-dd').txt"
@@ -16,29 +22,23 @@ function Write-Log {
     Add-Content -Path $logFile -Value "$logMessage"
 }
 
-Write-Log "Iniciando instalaÁ„o do FortiClient..."
+Write-Log "Iniciando instala√ß√£o do FortiClient..."
 
-# Remove conexıes antigas (comente caso deseja manter tuneis antigos)
+#remove conex√µes antigas
 Remove-Item -Path HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Recurse -Force -ErrorAction SilentlyContinue
 
 New-Item -Path HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Force
 Write-Log "Chave base criada em HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn"
 
-# Propriedade do Software Forticlient
-Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name log_level_daemon -Value "1" -Type Dword # Logs
-Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name log_level_gui -Value "1" -Type Dword # Logs
-Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name no_warn_invalid_cert -Value "0" -Type Dword # Avisar se o certificado for invalido
-Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name PreferDtlsTunnel -Value "0" -Type Dword # Tunel
-Write-Log "Valores de configuraÁ„o do FortiClient definidos."
+#propriedade do Software Forticlient
+Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name log_level_daemon -Value "1" -Type Dword
+Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name log_level_gui -Value "1" -Type Dword
+Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name no_warn_invalid_cert -Value "0" -Type Dword
+Set-ItemProperty HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn -Name PreferDtlsTunnel -Value "0" -Type Dword
+Write-Log "Valores de configura√ß√£o do FortiClient definidos."
 
 New-Item -Path HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn\Tunnels -Force
 Write-Log "Chave Tunnels criada em HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn\Tunnels"
-
-#Particularidade de cada Tunel
-$tunnels = @(
-        @{ Name = "Nome"; Server = "Servidor.remoto"; Description = "DescriÁ„o"; Sso =  "1" },
-        @{ Name = "Nome"; Server = "Servidor.remoto"; Description = "DescriÁ„o"; Sso =  "1" }
-)
 
 foreach ($tunnel in $tunnels) {
         $tunnelPath = "HKLM:\SOFTWARE\Fortinet\FortiClient\Sslvpn\Tunnels\$($tunnel.Name)"
@@ -54,9 +54,9 @@ foreach ($tunnel in $tunnels) {
         Set-ItemProperty -Path $tunnelPath -Name use_external_browser -Value "0" -Type Dword
         Set-ItemProperty -Path $tunnelPath -Name ServerCert -Value "0" -Type Dword
         Set-ItemProperty -Path $tunnelPath -Name azure_auto_login -Value "0" -Type Dword
-        Write-Log "ConfiguraÁ„o do Tunnel '$($tunnel.Name)' aplicada."
+        Write-Log "Configura√ß√£o do Tunnel '$($tunnel.Name)' aplicada."
 }
 
-Write-Log "ConfiguraÁ„o do FortiClient foi instalada com sucesso."
+Write-Log "Configura√ß√£o do FortiClient foi feita com sucesso."
 
 
